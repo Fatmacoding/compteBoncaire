@@ -4,15 +4,12 @@ compte = {}
 client = {}         
 ClientCompte = {} 
 fichier = open("stockage.json" , "r")
-list = json.loads(fichier.read( ))
+lists = json.loads(fichier.read( ))
 fichier.close()
-print("list" ,list)
-compte = list[0]
-client = list[1]
-ClientCompte = list[2]
-print(type(compte))
-print(type(client))
-print(type(ClientCompte))
+# print("list" ,list)
+compte = lists[0]
+client = lists[1]
+ClientCompte = lists[2]
 print("client  :   ",client)
 print("compte :   ",compte)
 print("clientcompte  :   ",ClientCompte)
@@ -25,10 +22,18 @@ def genererNumcompte(Numcl):
     return str(Numcl) + str(random.randint(0, 100))
 
 def client_compte(Numc):
-    k = list(ClientCompte.keys())
-    t = list(ClientCompte.values())
-    index = t.index(Numc)
-    return k[index]
+    # t = []
+    # k = []
+    # for i in ClientCompte.keys():
+    #     t.append(i)
+    # print(t,type(t))
+    # for j in ClientCompte.values():
+    #     print("type(j)",type(j))
+    #     k.append(j)
+    t =list( ClientCompte.keys())
+    k=list( ClientCompte.values())
+    index = k.index(Numc)
+    return t[index]
 
 
 def ajouterclient(Numcl,MPC,Numc,soldc):
@@ -37,7 +42,7 @@ def ajouterclient(Numcl,MPC,Numc,soldc):
     ClientCompte[Numcl] = Numc    
     # with open("projet.txt","w") as bro:
     #     bro.write(Numc +"/" + soldc +"/"+ Numcl  +"/" + MPC)
-    print("client ajouter avec NUMERO de compte : " , "{",Numc,"}")   
+    print(" ------->  client ajouter avec NUMERO de compte : " , "{",Numc,"}")   
 
 def supprimerclient(Numc):
     Numcl = client_compte(Numc)          #l'appele de fonction client_compte 
@@ -45,26 +50,26 @@ def supprimerclient(Numc):
         del client[Numcl]
         del compte[Numc]
         del ClientCompte[Numcl]
-        print("ce compte de client N°" , Numcl, "supprimer" )
+        print(" ------->  ce compte de client N°" , Numcl, "supprimer" )
     else:
-        print("Le compte n'existe pas")
+        print(" ------->  Le compte n'existe pas")
 
 def modifier_MPC(Numcl,MPC,Nouveux_MPC): 
-    if Numcl in client :
+    if Numcl in client and MPC in client[Numcl]:
         client[Numcl] = Nouveux_MPC
-        print("Mot de passe mofifie .")
+        print(" ------->  Mot de passe modifie .")
 
     else:
-        print("Client introvable .")
+        print(" ------->  Client introvable .")
 
 def deposer(Numc,montant_deposer):
     if Numc in compte:
         solde = compte[Numc]       
         solde = int(solde) + montant_deposer
         compte[Numc] = str(solde)
-        print(montant_deposer,"DH deposes avec succes .")        
+        print(" ------->  " ,montant_deposer,"DH deposes avec succes .")        
     else:
-        print("client introuvable")
+        print(" ------->  client introuvable")
 def retirer(Numc,montant_retirer):
     if Numc in compte :
         solde = compte[Numc] 
@@ -72,36 +77,51 @@ def retirer(Numc,montant_retirer):
             compte[Numc] = str(int(solde) - montant_retirer)
             print(montant_retirer,"DH retires avec succes .")          
         else:
-            print("solde insuffisant .")          
+            print(" ------->  solde insuffisant .")          
     else:
-        print("client introuvable")
+        print(" ------->  client introuvable")
         
 def afficher_solde(Numc):
     if Numc in compte :
-        print("solde",compte[Numc],"DH")
+        print(" ------->  solde",compte[Numc],"DH")
               
 def premier_menu():
-    print("         **************************MENU**********************************         ")
+    print()
+    print("---------------------------------------MENU----------------------------------------------")
+    print()
     print(" ---> Pour l'agent de banque entrer 1 : ")
     print(" ---> Pour le client entrer 2 : ")   
     print(" ---> Pour Quitter entrer 3 : ")
     premier_choix = input("Choisissez une option (1-3): ")
+    while premier_choix != "1" and premier_choix != "2" and premier_choix != "3" :
+        premier_choix = input("Choisissez une option (1-3): ")
     return int(premier_choix)
+
+    
 
 def menu(premier_chiox):
     if premier_chiox == 1:
-        print("      *************************MENU_AGENT****************************         ")
+        print()
+        print("--------------------------------------MENU_AGENT----------------------------------------")
+        print()
         print("1. Ajouter un Client")
         print("2. Supprimer un Client")
+        print("7. Quitter")
         choix = input("Choisissez une option (1-2): ")
+        while choix not in  ["1" ,"2","7"] :
+            choix = input("Choisissez une option (1-2): ")
     if premier_chiox == 2:
-        print("        **************************MENU_CLIENT*************************         ")
+        print()
+        print("--------------------------------------MENU_CLIENT---------------------------------------")
+        print()
         print("3. Modifier le mot de passe")
         print("4. Déposer de l'argent")
         print("5. Retirer de l'argent")
         print("6. afficher le solde")
         print("7. Quitter")
         choix = input("Choisissez une option (3-7): ")
+        while choix not in ["3" ,"4" ,"5" ,"6" ,"7"] :
+            choix = input("Choisissez une option (3-7): ")
     if premier_chiox == 3:
         choix = 8 
     return int(choix)
@@ -118,7 +138,7 @@ while True:
     elif choix ==2: 
         Numc = input("**Entrer le Numero de compte : ")
         supprimerclient(Numc)
-        print("hi")
+        # print("hi")
 
     elif choix == 3:
         Numcl = input("**Entrer Numero de client : ")
@@ -140,16 +160,23 @@ while True:
         Numc = input("**Entrer le Numero de compte : ")
         afficher_solde(Numc)
 
+    elif choix == 7:
+        premier_chiox = premier_menu()
+        choix = menu(premier_chiox)
     elif choix == 8:
         fichier = open("stockage.json" , "w")
-        fichier.write(json.dumps(list))
+        fichier.write(json.dumps(lists))
         fichier.close()
         break
+    else:
+        print('-------> Erreur ')
+    print()
     print("*********************************")
-    print("pour tester :")
-    print("client  :   ",client)
+    print(" ---> Pour tester :")
     print("compte :   ",compte)
+    print("client  :   ",client)
     print("clientcompte  :   ",ClientCompte)
+    print()
 
 
 
