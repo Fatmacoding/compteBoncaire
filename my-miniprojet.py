@@ -1,52 +1,36 @@
 import random
 import json
-compte = {}         
-client = {}         
-ClientCompte = {} 
+
 fichier = open("stockage.json" , "r")
 lists = json.loads(fichier.read( ))
 fichier.close()
-# print("list" ,list)
-compte = lists[0]
-client = lists[1]
-ClientCompte = lists[2]
-print("client  :   ",client)
-print("compte :   ",compte)
-print("clientcompte  :   ",ClientCompte)
-# compte = {}         # numéro de compte :sold
-# client = {}         # numéro de client :code secret
-# ClientCompte = {}   # associe à chaque numéro de client son numéro de compte
 
+compte = lists[0]                       # numéro de compte :sold
+client = lists[1]                       # numéro de client :code secret
+ClientCompte = lists[2]                 # associe à chaque numéro de client son numéro de compte
+t = []
+k = []
 
 def genererNumcompte(Numcl):
     return str(Numcl) + str(random.randint(0, 100))
 
 def client_compte(Numc):
-    # t = []
-    # k = []
-    # for i in ClientCompte.keys():
-    #     t.append(i)
-    # print(t,type(t))
-    # for j in ClientCompte.values():
-    #     print("type(j)",type(j))
-    #     k.append(j)
-    t =list( ClientCompte.keys())
-    k=list( ClientCompte.values())
-    index = k.index(Numc)
-    return t[index]
-
+    t = list( ClientCompte.keys())
+    k = list( ClientCompte.values())
+    if Numc in k :
+        index = k.index(Numc)
+        return t[index]
+    else:
+        return False
 
 def ajouterclient(Numcl,MPC,Numc,soldc):
     client[Numcl] = MPC
     compte[Numc] = soldc
-    ClientCompte[Numcl] = Numc    
-    # with open("projet.txt","w") as bro:
-    #     bro.write(Numc +"/" + soldc +"/"+ Numcl  +"/" + MPC)
+    ClientCompte[Numcl] = Numc 
     print(" ------->  client ajouter avec NUMERO de compte : " , "{",Numc,"}")   
 
-def supprimerclient(Numc):
-    Numcl = client_compte(Numc)          #l'appele de fonction client_compte 
-    if Numc in ClientCompte[Numcl] :
+def supprimerclient(Numcl):
+    if Numc == ClientCompte[Numcl] :
         del client[Numcl]
         del compte[Numc]
         del ClientCompte[Numcl]
@@ -93,7 +77,7 @@ def premier_menu():
     print(" ---> Pour le client entrer 2 : ")   
     print(" ---> Pour Quitter entrer 3 : ")
     premier_choix = input("Choisissez une option (1-3): ")
-    while premier_choix != "1" and premier_choix != "2" and premier_choix != "3" :
+    while premier_choix not in ["1" ,"2","3"] :
         premier_choix = input("Choisissez une option (1-3): ")
     return int(premier_choix)
 
@@ -126,6 +110,11 @@ def menu(premier_chiox):
         choix = 8 
     return int(choix)
 while True:
+    print()
+    print(" ---> Pour tester :")
+    print("compte :   ",compte)
+    print("client  :   ",client)
+    print("clientcompte  :   ",ClientCompte)
     premier_chiox=premier_menu()
     choix = menu(premier_chiox)
     if choix == 1: 
@@ -137,8 +126,13 @@ while True:
 
     elif choix ==2: 
         Numc = input("**Entrer le Numero de compte : ")
-        supprimerclient(Numc)
-        # print("hi")
+        Numcl = client_compte(Numc)         
+        while Numcl == False:
+            print(" ------->  client introuvable . ")
+            Numc = input("**Entrer le Numero de compte : ")
+            Numcl = client_compte(Numc)         
+        supprimerclient(Numcl)
+        
 
     elif choix == 3:
         Numcl = input("**Entrer Numero de client : ")
@@ -170,13 +164,7 @@ while True:
         break
     else:
         print('-------> Erreur ')
-    print()
-    print("*********************************")
-    print(" ---> Pour tester :")
-    print("compte :   ",compte)
-    print("client  :   ",client)
-    print("clientcompte  :   ",ClientCompte)
-    print()
+    
 
 
 
